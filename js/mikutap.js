@@ -213,32 +213,33 @@ var MainManager = function () {
           (this.update = function () {
             !(function () {
               if (l) {
-                var n = 1e3 * (aidn.___waContext.currentTime - m);
-                if (v * p < n) {
-                  var a = (v = Math.floor(n / p) + 1) * p - n;
-                  if (0 <= a) {
-                    if (!T) return;
-                    for (var e = (v - 1) % u, t = d.length, i = 0; i < t; i++) {
-                      var o = d[i][e];
-                      0 <= o && r.play(o, a / 1e3, s[o]);
-                    }
-                  }
+                if (curTime>=7.5) {
+                  console.log(curTime);
+                  oldTime = aidn.___waContext.currentTime;
+                  var o = d[0][0];
+                  0 <= o && r.play(o, 0, 1.2);
                 }
+                curTime = aidn.___waContext.currentTime - oldTime
               }
             })();
           }),
           (this.start = function () {
+            curTime = 8;
+            oldTime = aidn.___waContext.currentTime;
             (l = !0), (v = 0);
           });
         this.end = function () {
           (l = !1), (v = 0);
+          r.stopAll();
         };
+        var oldTime = 0;
+        var curTime = 8;
         var l = !1,
           o = 11;
         this.length = o;
         for (var s = [], n = 0; n < o; n++) s[n] = 1.2;
         s[1] *= 0.6;
-        var d = [[0, 1, 2, 1], []],
+        var d = [[0], []],
           a = "";
         (a += "3443443443443434"),
           (a += "5665665665665656"),
@@ -305,6 +306,7 @@ var MainManager = function () {
           f = 6e4 / 280;
       })(),
       g = new (function () {
+        //spinning ball
         var s = function (n, a) {
             (this.id = n),
               (this.setPosition = function (n, a) {
@@ -337,6 +339,7 @@ var MainManager = function () {
               r = new PIXI.Graphics();
             (r.interactive = !0), a.addChild(r);
           },
+          //background
           n = function (n) {
             function a() {
               o.clear(), o.beginFill(16777215), o.drawRect(0, 0, G, A);
@@ -365,6 +368,7 @@ var MainManager = function () {
               r = n;
             r.addChild(o);
           },
+          //draw circle
           d = function (n, a) {
             function e() {
               var n,
@@ -408,6 +412,7 @@ var MainManager = function () {
               r && r();
             }
             this.play = function (n, a) {
+              //n=100;
               (o = 0),
                 (d = n),
                 (r = a),
@@ -441,6 +446,7 @@ var MainManager = function () {
               f = new PIXI.Graphics();
             h.addChild(f), (a.mask = f);
           },
+          //rotating shape
           r = function (n) {
             function h() {
               w.clear(), 0 == f ? w.lineStyle(v, u) : w.beginFill(u);
@@ -499,6 +505,7 @@ var MainManager = function () {
             y.addChild(w);
             var M = {};
           },
+          //
           t = function (n, a) {
             var f = function (n) {
               function i() {
@@ -1753,6 +1760,11 @@ var MainManager = function () {
       }),
       (this.stop = function (n) {
         n < o && t[n].stop();
+      });
+      (this.stopAll = function () {
+        for(var i = 0; i<t.length; i++){
+          t[i].stop();
+        }
       });
     var o,
       r,
