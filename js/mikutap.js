@@ -33,9 +33,9 @@ var MainManager = function () {
     }
     function n(n) {
       (U = !U)
-        ? ($("#bt_feedback a").text("反馈: 开启"),
+        ? ($("#bt_feedback a").text("触摸反馈: 开启"),
           aidn.util.setCookie("fb", "on", 2592e3))
-        : ($("#bt_feedback a").text("反馈: 关闭"),
+        : ($("#bt_feedback a").text("触摸反馈: 关闭"),
           aidn.util.setCookie("fb", "off", 2592e3)),
         n && n.preventDefault();
     }
@@ -130,6 +130,8 @@ var MainManager = function () {
         aidn.util.fullscreen();
       })),
       $("#bt_start a").click(function (n) {
+        $("#bt_back").text("＜返回");
+        $("#scene_info").stop().fadeOut(200, "linear"),
         $("#scene_top").stop().fadeOut(200, "linear"),
           $("#scene_loading").stop().fadeIn(200, "linear"),
           2 == b ? i() : (new aidn.WebAudio().load(""), C.init(t, e));
@@ -156,13 +158,15 @@ var MainManager = function () {
             } catch (n) {}
             g.end(),
               C.end(),
+              $('#bt_back').text("＜返回");
               $("#scene_top").stop().fadeIn(100, "linear"),
               $("#scene_loading").stop().fadeOut(100, "linear"),
               $("#scene_main").stop().fadeOut(100, "linear"),
+              $("#scene_info").stop().fadeIn(100, "linear"),
               v();
             break;
           default:
-            location.href = "https://github.com/HFIProgramming/mikutap/";
+            location.href = "http://meagames.cn/";
         }
       }),
       $("#bt_feedback a").click(n),
@@ -212,19 +216,25 @@ var MainManager = function () {
         }),
           (this.update = function () {
             !(function () {
-              if (l) {
-                if (curTime>=7.5) {
-                  console.log(curTime);
-                  oldTime = aidn.___waContext.currentTime;
-                  var o = d[0][0];
-                  0 <= o && r.play(o, 0, 1.2);
+              if(T){
+                if (l) {
+                  //持续时间
+                  if (curTime>=14.24) {
+                    //console.log(curTime);
+                    oldTime = aidn.___waContext.currentTime;
+                    var o = d[0][0];
+                    0 <= o && r.play(o, 0, 0.5);
+                  }
+                  curTime = aidn.___waContext.currentTime - oldTime
                 }
-                curTime = aidn.___waContext.currentTime - oldTime
+              }else{
+                curTime = 99;
+                r.stopAll();
               }
             })();
           }),
           (this.start = function () {
-            curTime = 8;
+            curTime = 14.26;
             oldTime = aidn.___waContext.currentTime;
             (l = !0), (v = 0);
           });
@@ -233,7 +243,7 @@ var MainManager = function () {
           r.stopAll();
         };
         var oldTime = 0;
-        var curTime = 8;
+        var curTime = 14.26;
         var l = !1,
           o = 11;
         this.length = o;
@@ -278,7 +288,8 @@ var MainManager = function () {
             t = Math.floor(e / f);
           t == r && 0 <= l && o.stop(l), (r = t), (l = n);
           var i = f - (e % f);
-          o.play(n, i / 1e3, d[n]);
+          //console.log(i);
+          o.play(n, i / 1e3, 1.2);
         };
         var s = 32;
         this.length = s;
@@ -303,10 +314,11 @@ var MainManager = function () {
           d[n] *= 1.2;
         var c,
           e,
-          f = 6e4 / 280;
+          f = 6e4 / 135;
       })(),
       g = new (function () {
-        //spinning ball
+        //==========================================================
+        //环形出现然后随机消失的圆形
         var s = function (n, a) {
             (this.id = n),
               (this.setPosition = function (n, a) {
@@ -339,7 +351,8 @@ var MainManager = function () {
               r = new PIXI.Graphics();
             (r.interactive = !0), a.addChild(r);
           },
-          //background
+          //==========================================================
+          //背景
           n = function (n) {
             function a() {
               o.clear(), o.beginFill(16777215), o.drawRect(0, 0, G, A);
@@ -368,7 +381,8 @@ var MainManager = function () {
               r = n;
             r.addChild(o);
           },
-          //draw circle
+          //==========================================================
+          //绘制随机多边形
           d = function (n, a) {
             function e() {
               var n,
@@ -446,7 +460,8 @@ var MainManager = function () {
               f = new PIXI.Graphics();
             h.addChild(f), (a.mask = f);
           },
-          //rotating shape
+          //==========================================================
+          //绘制实心圆形
           r = function (n) {
             function h() {
               w.clear(), 0 == f ? w.lineStyle(v, u) : w.beginFill(u);
@@ -505,7 +520,8 @@ var MainManager = function () {
             y.addChild(w);
             var M = {};
           },
-          //
+          //==========================================================
+          //绘制实心圆形2
           t = function (n, a) {
             var f = function (n) {
               function i() {
@@ -601,6 +617,7 @@ var MainManager = function () {
               w = [];
             (this.size = 0), (this.container = y), p.addChild(y);
           };
+          //==========================================================
         function l(n, a) {
           for (var e = M.length, t = 0; t < e; t++) {
             var i = M[t];
@@ -608,6 +625,7 @@ var MainManager = function () {
           }
           return !1;
         }
+        //==========================================================
         function a(n) {
           c(
             65 <= n.keyCode
@@ -617,19 +635,23 @@ var MainManager = function () {
               : n.keyCode
           );
         }
+        //==========================================================
         function e(n) {
           c(-1);
         }
+        //==========================================================
+        var cot = 0;
         function i(n) {
-          y = !0;
-          var a = aidn.event.getPos(n),
-            e = l(a.x, a.y);
-          if ((c(e), n.originalEvent && n.originalEvent.touches))
-            for (var t = n.originalEvent.touches.length, i = 1; i < t; i++) {
-              var o = n.originalEvent.touches[i];
-              c((e = l(o.pageX, o.pageY)), 1);
-            }
+            y = !0;
+            var a = aidn.event.getPos(n),
+              e = l(a.x, a.y);
+            if ((c(e), n.originalEvent && n.originalEvent.touches))
+              for (var t = n.originalEvent.touches.length, i = 1; i < t; i++) {
+                var o = n.originalEvent.touches[i];
+                c((e = l(o.pageX, o.pageY)), 1);
+              }
         }
+        //==========================================================
         function o(n) {
           if (y) {
             var a = aidn.event.getPos(n);
@@ -637,9 +659,12 @@ var MainManager = function () {
           }
           n.preventDefault();
         }
+        //==========================================================
         function h(n) {
           y && (c(-1), (y = !1));
         }
+        //==========================================================
+        //按压提起：u的定义
         function c(n, a, e) {
           var t, i;
           u != n &&
@@ -659,6 +684,7 @@ var MainManager = function () {
               (t = n % m.length),
               (0 < C[t].length ? C[t].pop() : new m[t](b, t)).play()));
         }
+        //==========================================================
         (this.resize = function () {
           if (w) {
             var n = 0,
@@ -676,6 +702,7 @@ var MainManager = function () {
             T.resize();
           }
         }),
+        //==========================================================
           (this.init = function () {
             (w = !0),
               (b = new PIXI.Container()),
@@ -684,6 +711,8 @@ var MainManager = function () {
               z.addChild(f),
               (T = new n(b)).setColor(8965324, 0);
           }),
+          //==========================================================
+          //绑定点击事件和方法
           (this.start = function () {
             E ||
               ($("#view").on("mousedown", i),
@@ -697,6 +726,7 @@ var MainManager = function () {
                 $(window).on("touchend", h)),
               $("#view").css("cursor", "pointer");
           }),
+          //==========================================================
           (this.end = function () {
             E ||
               ($("#view").off("mousedown", i),
@@ -710,9 +740,11 @@ var MainManager = function () {
                 $(window).off("touchend", h)),
               $("#view").css("cursor", "auto");
           }),
+          //==========================================================
           (this.changeId = function (n, a, e) {
             c(n, a, e);
           });
+          //==========================================================
         var f,
           u = -1,
           v = 4,
@@ -721,24 +753,42 @@ var MainManager = function () {
           w = !1,
           M = [],
           m = [
+            //==========================================================
+            //动画定义开始
             function (n, a) {
+              //圆形爆发 #1
               var s = function (n) {
                 function l() {
                   s.visible = !1;
                 }
                 this.play = function (n, a, e) {
                   (s.visible = !0), s.clear();
-                  var t = G * Math.random(),
-                    i = A * Math.random(),
-                    o = Math.min(G, A) * (0.03 * Math.random() + 0.02);
+                  var isUp = Math.round(Math.random()) == 0;
+                  if(isUp){
+                    var t = G * Math.random();
+                    var i = A * Math.round(Math.random());
+                  }else{
+                    var t = G * Math.round(Math.random());
+                    var i = A * Math.random();
+                  }
+                  //var t = G * Math.random(),
+                    //i = A * Math.random(),
+                  var o = Math.min(G, A) * (0.2*Math.random() + 0.02);
+                  var deg = 2*Math.PI*Math.random();
+                  //console.log(o);
+                  //var rx = radius*Math.sin(deg)+n;
+                  //var ry = radius*Math.cos(deg)+a;
+                  //console.log("("+rx+","+ry+")");
                   s.lineStyle(3 * Math.random() + 3, e),
+                  s.beginFill(e),
                     s.drawCircle(0, 0, o),
-                    (s.x = n),
-                    (s.y = a),
+                    s.endFill(),
+                    (s.x = t),
+                    (s.y = i),
                     (s.scale.x = 0),
                     (s.scale.y = 0),
                     (s.rotation = Math.random() * Math.PI);
-                  var r = 0.2 * Math.random() + 0.4;
+                  var r = 0.1 * Math.random() + 0.4;
                   return (
                     gsap.to(s, r, {
                       x: t,
@@ -783,6 +833,7 @@ var MainManager = function () {
                   gsap.delayedCall(a, d);
                 })();
               };
+              var radius = Math.min(G,A)*Math.random();
               var e = this,
                 h = n;
               this.id = a;
@@ -790,16 +841,40 @@ var MainManager = function () {
                 f = new PIXI.Container();
               h.addChild(f);
             },
+            //==========================================================
+            //方形爆发 #2
             function (n, a) {
               var s = function (n) {
                 function l() {
                   s.visible = !1;
                 }
-                this.play = function (n, a, e) {
+                this.play = function (n, a, e, direction) {
                   (s.visible = !0), s.clear();
-                  var t = G * Math.random(),
-                    i = A * Math.random(),
-                    o = Math.min(G, A) * (0.04 * Math.random() + 0.02);
+                  if(direction==1){
+                    var t = G * Math.random();
+                    n = t;
+                    var i = A;
+                    a = 0;
+                  }else if(direction==2){
+                    var t = G;
+                    n = 0;
+                    var i = A * Math.random();
+                    a = i;
+                  }else if(direction==3){
+                    var t = G * Math.random();
+                    n = t;
+                    var i = 0;
+                    a = A;
+                  }
+                  else if(direction==4){
+                    var t = 0;
+                    n = G;
+                    var i = A * Math.random();
+                    a = i;
+                  }
+                  //var t = G * Math.random(),
+                    //i = A * Math.random(),
+                  var o = Math.min(G, A) * (0.2 * Math.random() + 0.02);
                   s.beginFill(e),
                     s.drawRect(-o / 2, -o / 2, o, o),
                     (s.x = n),
@@ -810,7 +885,7 @@ var MainManager = function () {
                   var r = 0.2 * Math.random() + 0.4;
                   return (
                     gsap.to(s, r, {
-                      x: t,
+                      x: t, 
                       y: i,
                       rotation: Math.random() * Math.PI,
                       ease: Power3.easeOut,
@@ -840,13 +915,14 @@ var MainManager = function () {
                       e = G / 2,
                       t = A / 2,
                       i = L(),
+                      direction = Math.floor(Math.random()*5),
                       o = 0;
                     o < n;
                     o++
                   ) {
                     var r;
                     r = c[o] ? c[o] : new s(f);
-                    var l = (c[o] = r).play(e, t, i);
+                    var l = (c[o] = r).play(e, t, i, direction);
                     a < l && (a = l);
                   }
                   gsap.delayedCall(a, d);
@@ -859,6 +935,8 @@ var MainManager = function () {
                 f = new PIXI.Container();
               h.addChild(f);
             },
+            //==========================================================
+            //螺旋圆形 #3
             function (n, a) {
               var h = function (n) {
                 function r() {
@@ -906,6 +984,7 @@ var MainManager = function () {
                 (v.visible = !1), C[e.id].push(e);
               }
               this.play = function () {
+                //console.log(3);
                 !(function () {
                   f.setChildIndex(v, f.children.length - 1),
                     (v.visible = !0),
@@ -941,6 +1020,8 @@ var MainManager = function () {
                 v = new PIXI.Container();
               f.addChild(v);
             },
+            //==========================================================
+            //实心多边形扭曲 #4
             function (n, a) {
               function e() {
                 C[t.id].push(t);
@@ -953,6 +1034,8 @@ var MainManager = function () {
               this.id = a;
               var o = new r(i);
             },
+            //==========================================================
+            //空心多边形扭曲 #5
             function (n, a) {
               function e() {
                 C[t.id].push(t);
@@ -965,6 +1048,8 @@ var MainManager = function () {
               this.id = a;
               var o = new r(i);
             },
+            //==========================================================
+            //绘制多边形 #6
             function (n, a) {
               function h() {
                 (f.visible = !1), C[e.id].push(e);
@@ -1006,6 +1091,8 @@ var MainManager = function () {
               c.addChild(f), f.addChild(u);
               var v = new d(f, u);
             },
+            //==========================================================
+            //随机出现的方形 #7
             function (n, a) {
               var i = function (n) {
                 function e() {
@@ -1091,6 +1178,8 @@ var MainManager = function () {
               r.addChild(l);
               var s = [];
             },
+            //==========================================================
+            //随机出现的圆形 #8
             function (n, a) {
               var i = function (n) {
                 function e() {
@@ -1158,6 +1247,8 @@ var MainManager = function () {
               r.addChild(l);
               var s = [];
             },
+            //==========================================================
+            //圆形条纹 #9
             function (n, a) {
               function o() {
                 (l.visible = !1), C[e.id].push(e);
@@ -1211,6 +1302,8 @@ var MainManager = function () {
               l.addChild(s);
               var d = new t(l, -1);
             },
+            //==========================================================
+            //扩大的多边形 #10
             function (n, a) {
               function d() {
                 (c.visible = !1), C[e.id].push(e);
@@ -1261,6 +1354,8 @@ var MainManager = function () {
               var c = new PIXI.Graphics();
               h.addChild(c);
             },
+            //==========================================================
+            //绘制实心圆形 #11
             function (n, a) {
               function e() {
                 (o.visible = !1), C[t.id].push(t);
@@ -1287,6 +1382,8 @@ var MainManager = function () {
               i.addChild(o), o.addChild(r);
               var l = new d(o, r);
             },
+            //==========================================================
+            // 旋转的方形 #12
             function (n, a) {
               var u = function (n) {
                 function t() {
@@ -1389,6 +1486,8 @@ var MainManager = function () {
                 w = [];
               p.addChild(y);
             },
+            //==========================================================
+            // 环状出现然后随机消失的圆形 #13
             function (n, a) {
               var u = function (n) {
                 function e() {
@@ -1478,6 +1577,8 @@ var MainManager = function () {
                 w = [];
               p.addChild(y);
             },
+            //==========================================================
+            // 旋转的X #14
             function (n, a) {
               function i() {
                 (r.visible = !1), C[e.id].push(e);
@@ -1535,6 +1636,8 @@ var MainManager = function () {
                 s = new PIXI.Graphics();
               o.addChild(r), r.addChild(l), r.addChild(s);
             },
+            //==========================================================
+            // 随机线 #15
             function (n, a) {
               function o() {
                 if (r < ++c)
@@ -1609,6 +1712,8 @@ var MainManager = function () {
                 u = new PIXI.Graphics();
               t.addChild(u);
             },
+            //==========================================================
+            // 方形条纹 #16
             t,
           ],
           I = [
@@ -1727,8 +1832,8 @@ var MainManager = function () {
       aidn.util.webaudio
         ? ($("#ng").css("display", "none"),
           $(".ok").css("display", "block"),
-          E && $("#scene_main .attention").html("TOUCH &amp; SWIPE!"),
-          y || $("#scene_top .attention").text("* Raise the volume and enjoy!"))
+          E && $("#scene_main .attention").html("滑动·点击屏幕或按下任意键"),
+          y || $("#scene_top .attention").text("* 调高音量感受节奏吧！"))
         : ($("#ng").css("display", "block"),
           $(".ok").css("display", "none"),
           y ||
@@ -1756,7 +1861,7 @@ var MainManager = function () {
         });
     }),
       (this.play = function (n, a, e) {
-        0 <= e || (e = 1), n < o && t[n].play(0, !1, null, 0, e, a);
+        t[n].play(0, !1, null, 0, e, a);
       }),
       (this.stop = function (n) {
         n < o && t[n].stop();
@@ -1774,5 +1879,6 @@ var MainManager = function () {
       h = this,
       a = -1,
       t = [];
+    var cot = 0;
     (this.length = 0), (this.now = 0);
   };

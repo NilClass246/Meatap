@@ -13,6 +13,12 @@ html {
 .ok {
   display: none;
 }
+.btm{
+  position: absolute; 
+  bottom: 5%;
+  width: 100%;
+
+}
 #about a,
 #bt_about a,
 #bt_backtrack a,
