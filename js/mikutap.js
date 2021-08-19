@@ -42,9 +42,9 @@ var MainManager = function () {
     }
     function o(n) {
       (T = !T)
-        ? ($("#bt_backtrack a").text("背景音乐: 开启"),
+        ? ($("#bt_backtrack a").text("ASMR模式: 关闭"),
           aidn.util.setCookie("bt", "on", 2592e3))
-        : ($("#bt_backtrack a").text("背景音乐: 关闭"),
+        : ($("#bt_backtrack a").text("ASMR模式: 开启"),
           aidn.util.setCookie("bt", "off", 2592e3)),
         n && n.preventDefault();
     }
@@ -83,7 +83,7 @@ var MainManager = function () {
     }
     this.init = function () {
       !(function () {
-        aidn.util.setCookie("MusicNumber", "0", 2592e3);
+        aidn.util.setCookie("MusicNumber", "1", 2592e3);
         aidn.window.addDummyDiv();
         try {
           aidn.adv.show();
@@ -180,23 +180,32 @@ var MainManager = function () {
       }),
       //bgm选择
       $("#bt_bgm_1").click(function(n){
-        $("#select_bgm_1").css("display", "inline-block");
-        $("#select_bgm_2").css("display", "none");
-        $("#select_bgm_3").css("display", "none");
+        $("#select_bgm_1_before").css("display", "inline-block");
+        $("#select_bgm_1_after").css("display", "inline-block");
+        $("#select_bgm_2_before").css("display", "none");
+        $("#select_bgm_2_after").css("display", "none");
+        $("#select_bgm_3_before").css("display", "none");
+        $("#select_bgm_3_after").css("display", "none");
         aidn.util.setCookie("MusicNumber", "0", 2592e3);
         n.preventDefault();
       }),
       $("#bt_bgm_2").click(function(n){
-        $("#select_bgm_1").css("display", "none");
-        $("#select_bgm_2").css("display", "inline-block");
-        $("#select_bgm_3").css("display", "none");
+        $("#select_bgm_1_before").css("display", "none");
+        $("#select_bgm_1_after").css("display", "none");
+        $("#select_bgm_2_before").css("display", "inline-block");
+        $("#select_bgm_2_after").css("display", "inline-block");
+        $("#select_bgm_3_before").css("display", "none");
+        $("#select_bgm_3_after").css("display", "none");
         aidn.util.setCookie("MusicNumber", "1", 2592e3);
         n.preventDefault();
       }),
       $("#bt_bgm_3").click(function(n){
-        $("#select_bgm_1").css("display", "none");
-        $("#select_bgm_2").css("display", "none");
-        $("#select_bgm_3").css("display", "inline-block");
+        $("#select_bgm_1_before").css("display", "none");
+        $("#select_bgm_1_after").css("display", "none");
+        $("#select_bgm_2_before").css("display", "none");
+        $("#select_bgm_2_after").css("display", "none");
+        $("#select_bgm_3_before").css("display", "inline-block");
+        $("#select_bgm_3_after").css("display", "inline-block");
         aidn.util.setCookie("MusicNumber", "2", 2592e3);
         n.preventDefault();
       }),
@@ -253,11 +262,11 @@ var MainManager = function () {
                   MusicNumber = Number(aidn.util.getCookie("MusicNumber"));
                   var duration = 0;
                   if(MusicNumber == 0){
-                    duration = 14.24;
+                    duration = 14.19;
                   }else if(MusicNumber == 1){
-                    duration = 54.89;
+                    duration = 54.85;
                   }else if(MusicNumber ==2){
-                    duration = 13.25;
+                    duration = 13.21;
                   }
                   if (curTime>=duration) {
                     oldTime = aidn.___waContext.currentTime;
@@ -268,7 +277,9 @@ var MainManager = function () {
                 }
               }else{
                 curTime = 99;
-                r.stopAll();
+                if(r){
+                  r.stopAll();
+                }
               }
             })();
           }),
@@ -459,7 +470,7 @@ var MainManager = function () {
               (o = 1),
                 gsap.fromTo(
                   c,
-                  0.9,
+                  0.7,
                   { rotation: 0 },
                   {
                     rotation: 360,
@@ -487,7 +498,7 @@ var MainManager = function () {
                 f.endFill(),
                 gsap.fromTo(
                   c,
-                  0.6,
+                  0.4,
                   { rotation: 0 },
                   {
                     rotation: 360,
@@ -1748,87 +1759,67 @@ var MainManager = function () {
             function (n, a) {
               var u = function (n) {
                 function t() {
-                  var distance = o*0.3;
-                  if(direction == 0){
-                    l.x -=distance;
-                    l2.x+=distance;
-                  }else{
-                    l.y-=distance;
-                    l2.y+=distance;
-                  }
-                  gsap.to(l, 0.3, 
-                    {alpha: 0,
-                      ease: Power0.easeIn,
-                      onComplete: a,
-                      delay: 0.2});
-                      gsap.to(l2, 0.3, 
-                        {alpha: 0,
-                          ease: Power0.easeIn,
-                          delay: 0.2});
+                  gsap.to(l.scale, 0.4, {
+                    x: 0,
+                    y: 0,
+                    ease: Back.easeIn.config(2),
+                    onComplete: a,
+                    delay: 0.7,
+                  }),
+                    gsap.to(l, 0.4, {
+                      rotation: Math.random() * Math.PI * 2,
+                      ease: Back.easeIn.config(2),
+                      delay: 0.7,
+                    });
                 }
                 function a() {
-                  (l2.visible = !1),(l.visible = !1), i && i();
+                  (l.visibloe = !1), i && i();
                 }
                 (this.init = function (n, a, e, t) {
-                  (_state = 0), (o = e), (r = t);
-                  if(direction==0){
-                    l.x = -o/2;
-                    l.y = -o/2;
-                    l2.x = 0;
-                    l2.y = -o/2;
-                  }else{
-                    l.x = - o/2;
-                    l.y = -o/2;
-                    l2.x = - o/2;
-                    l2.y = 0;
-                  }
+                  (_state = 0), (o = e), (r = t), (l.x = n), (l.y = a);
                 }),
                   (this.play = function (n, a) {
                     (i = a),
-                      l.clear();
-                      l2.clear();
-                      (l.visible = !0);
-                      (l2.visible = !0);
-                      if(direction==0){
-                        l.beginFill(r);
-                        l.drawRect(0, 0, o/2, o);
-                        l2.beginFill(r);
-                        l2.drawRect(0,0,o/2,o);
-                      }else{
-                        l.beginFill(r);
-                        l.drawRect(0, 0, o, o/2);
-                        l2.beginFill(r);
-                        l2.drawRect(0,0,o,o/2);
-                      }
-
-                      l.alpha = 0;
-                      l2.alpha = 0;
-                      gsap.to(
+                      l.clear(),
+                      (l.visibloe = !0),
+                      l.beginFill(r),
+                      l.drawRect(0.5 * -o, 0.5 * -o, o, o),
+                      gsap.fromTo(
+                        l.scale,
+                        0.3,
+                        { x: 0, y: 0 },
+                        {
+                          x: 1,
+                          y: 1,
+                          ease: Back.easeOut.config(1.7),
+                          onComplete: t,
+                          delay: n,
+                        }
+                      ),
+                      gsap.fromTo(
                         l,
-                        0.5,
+                        0.7,
+                        { rotation: Math.random() * Math.PI * 2 },
                         {
-                          alpha: 1,
-                          ease: Bounce.easeOut,
-                          onComplete: t
+                          rotation: 0,
+                          ease: Elastic.easeOut.config(1, 0.3),
+                          delay: n,
                         }
-                      )
-                      gsap.to(
-                        l2,
-                        0.5,
-                        {
-                          alpha: 1,
-                          ease: Bounce.easeOut,
-                        }
-                      )
+                      );
+                    var e = Math.random() * Math.PI;
+                    gsap.fromTo(
+                      y,
+                      1,
+                      { rotation: 0 },
+                      { rotation: e, ease: Bounce.easeOut, delay: n }
+                    );
                   });
                 var i,
                   o,
                   r,
                   e = n,
                   l = new PIXI.Graphics();
-                var l2 = new PIXI.Graphics();
                 e.addChild(l);
-                e.addChild(l2);
               };
               function v() {
                 (y.visible = !1), C[e.id].push(e);
@@ -1839,22 +1830,19 @@ var MainManager = function () {
                     (y.visible = !0),
                     (y.x = G / 2),
                     (y.y = A / 2);
-                  var n = 1,
-                  //Math.floor(8 * Math.random() + 6),
-                    a = Math.min(G, A),
-                    // * (0.25 * Math.random() + 0.25),
+                  var n = Math.floor(8 * Math.random() + 6),
+                    a = Math.min(G, A) * (0.25 * Math.random() + 0.25),
                     e = 360 / n,
-                    t = a * (0.2 * Math.random() + 0.5),
+                    t = a * (0.15 * Math.random() + 0.05),
                     i = L(),
                     o = (Math.PI / 2) * Math.floor(4 * Math.random()),
                     r = 1;
-                  direction = Math.round(Math.random()); //0或1 
                   Math.random() < 0.5 && (r = -1);
                   for (var l = 0; l < n; l++) {
                     var s,
                       d = ((r * e * l + o) * Math.PI) / 180,
-                      h = G/2,
-                      c = A/2;
+                      h = a * Math.cos(d),
+                      c = a * Math.sin(d);
                     (s = w[l] ? w[l] : new u(y)), (w[l] = s);
                     var f = null;
                     l == n - 1 && (f = v),
@@ -1863,7 +1851,6 @@ var MainManager = function () {
                   }
                 })();
               };
-              var direction;
               var e = this,
                 p = n;
               this.id = a;
@@ -2205,7 +2192,7 @@ var MainManager = function () {
         ? ($("#ng").css("display", "none"),
           $(".ok").css("display", "block"),
           E && $("#scene_main .attention").html("滑动·点击屏幕或按下任意键"),
-          y || $("#scene_top .attention").text("* 调高音量感受节奏吧！"))
+          y || $("#scene_top .attention").text("调高音量感受节奏吧"))
         : ($("#ng").css("display", "block"),
           $(".ok").css("display", "none"),
           y ||
