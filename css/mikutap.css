@@ -1,4 +1,6 @@
+
 #about_cover,
+#option_cover,
 #view,
 #view canvas,
 body,
@@ -7,7 +9,9 @@ html {
   width: 100%;
 }
 #about,
+#option,
 #about_cover,
+#option_cover,
 #bt_fs,
 #ng,
 .ok {
@@ -20,26 +24,30 @@ html {
 
 }
 #about a,
+#option a,
 #bt_about a,
+#bt_option a,
 #bt_backtrack a,
 #bt_feedback a,
 #bt_start a {
   color: #fff;
   text-decoration: none;
   border-bottom: dashed 1px #fff;
+  cursor: pointer;
 }
 body,
 html {
   position: absolute;
   overflow: hidden;
   text-align: center;
-  background: #8cc;
+  background: #7dcce1;
   color: #fff;
   font-family: Quicksand, "游ゴシック", "Yu Gothic", "游ゴシック体", YuGothic,
     "Yu Gothic UI", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro",
     "Meiryo UI", "メイリオ", Meiryo, sans-serif;
 }
 #about_cover,
+#option_cover,
 #view {
   position: fixed;
   top: 0;
@@ -67,6 +75,7 @@ html {
   width: 100%;
 }
 #about,
+#option,
 #scene_loading,
 #scene_main,
 #scene_top {
@@ -81,14 +90,15 @@ html {
 }
 #scene_top h1 {
   font-size: 1.5rem;
-  margin-bottom: 25px;
 }
-#bt_start {
+#bt_start,
+#bt_option,
+#bt_about {
   margin-bottom: 15px;
 }
 #scene_top .attention {
   font-size: 0.9rem;
-  margin-top: 25px;
+  margin-bottom: 25px;
 }
 #scene_top .tit {
   margin-top: 20px;
@@ -126,16 +136,33 @@ html {
   background: #fff;
   opacity: 0.5;
 }
+#option_cover {
+  z-index: 900;
+  background: #fff;
+  opacity: 0.5;
+}
 #about {
   z-index: 1000;
   color: #fff;
-  background: #8cc;
+  background: #7dcce1;
+  max-width: 640px;
+  letter-spacing: 0.2rem;
+  line-height: 1.2;
+  width: 100%;
+}
+#option {
+  z-index: 1000;
+  color: #fff;
+  background: #7dcce1;
   max-width: 640px;
   letter-spacing: 0.2rem;
   line-height: 1.2;
   width: 100%;
 }
 #about_in {
+  padding: 40px;
+}
+#option_in {
   padding: 40px;
 }
 #bt_close {
@@ -145,11 +172,23 @@ html {
 #about .close {
   margin-bottom: 30px;
 }
+#option .close {
+  margin-bottom: 30px;
+}
 #about .con {
   line-height: 1.7;
   margin-bottom: 20px;
 }
+#option .con {
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
 #about .link {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+#option .link {
   margin-top: 30px;
   margin-bottom: 10px;
   line-height: 1.5;
@@ -183,19 +222,21 @@ a:hover {
 @media (max-width: 640px) {
   #scene_top h1 {
     font-size: 1.2rem;
-    margin-bottom: 18px;
   }
   #bt_start,
+  #bt_option,
+  #bt_about,
   #scene_top .tit {
     margin-bottom: 10px;
   }
   #bt_about a,
+  #bt_option a,
   #bt_start a {
     font-size: 0.9rem;
   }
   #scene_top .attention {
     font-size: 0.6rem;
-    margin-top: 18px;
+    margin-bottom: 18px;
   }
   #scene_top .tit {
     font-size: 0.9rem;
@@ -221,6 +262,9 @@ a:hover {
   #about_in {
     padding: 30px;
   }
+  #option_in {
+    padding: 30px;
+  }
   #bt_close {
     font-size: 1.8rem;
     cursor: pointer;
@@ -228,13 +272,25 @@ a:hover {
   #about {
     letter-spacing: 0.1rem;
   }
+  #option {
+    letter-spacing: 0.1rem;
+  }
   #about a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: dashed 1px #fff;
+  }
+  #option a {
     color: #fff;
     text-decoration: none;
     border-bottom: dashed 1px #fff;
   }
   #about .con,
   #about .link {
+    font-size: 0.9rem;
+  }
+  #option .con,
+  #option .link {
     font-size: 0.9rem;
   }
 }

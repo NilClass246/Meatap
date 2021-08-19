@@ -18,6 +18,7 @@ var MainManager = function () {
     }
     function i() {
       (x = 1),
+      
         $("#scene_loading hr").css("display", "none"),
         $("#scene_loading hr").css("width", 0),
         $("#scene_loading").stop().fadeOut(200, "linear"),
@@ -82,6 +83,7 @@ var MainManager = function () {
     }
     this.init = function () {
       !(function () {
+        aidn.util.setCookie("MusicNumber", "0", 2592e3);
         aidn.window.addDummyDiv();
         try {
           aidn.adv.show();
@@ -89,7 +91,7 @@ var MainManager = function () {
         var n = 1;
         2 <= window.devicePixelRatio && (n = 2);
         ((I = PIXI.autoDetectRenderer(G, A, {
-          backgroundColor: 16756655,
+          backgroundColor: 0x7dcce1,
           antialias: !1,
           resolution: n,
         })).autoDensity = !0),
@@ -145,9 +147,16 @@ var MainManager = function () {
           $("#about_cover").stop().fadeIn(200, "linear"),
           n.preventDefault();
       }),
-      $("#bt_close,#about_cover").click(function () {
+      $("#bt_option a").click(function (n) {
+        $("#option").stop().fadeIn(200, "linear"),
+          $("#option_cover").stop().fadeIn(200, "linear"),
+          n.preventDefault();
+      }),
+      $("#bt_close,#about_cover,#option_cover").click(function () {
         $("#about").stop().fadeOut(200, "linear"),
           $("#about_cover").stop().fadeOut(200, "linear");
+        $("#option").stop().fadeOut(200, "linear"),
+          $("#option_cover").stop().fadeOut(200, "linear");
       }),
       $("#bt_back").click(function () {
         switch (x) {
@@ -168,6 +177,28 @@ var MainManager = function () {
           default:
             location.href = "http://meagames.cn/";
         }
+      }),
+      //bgm选择
+      $("#bt_bgm_1").click(function(n){
+        $("#select_bgm_1").css("display", "inline-block");
+        $("#select_bgm_2").css("display", "none");
+        $("#select_bgm_3").css("display", "none");
+        aidn.util.setCookie("MusicNumber", "0", 2592e3);
+        n.preventDefault();
+      }),
+      $("#bt_bgm_2").click(function(n){
+        $("#select_bgm_1").css("display", "none");
+        $("#select_bgm_2").css("display", "inline-block");
+        $("#select_bgm_3").css("display", "none");
+        aidn.util.setCookie("MusicNumber", "1", 2592e3);
+        n.preventDefault();
+      }),
+      $("#bt_bgm_3").click(function(n){
+        $("#select_bgm_1").css("display", "none");
+        $("#select_bgm_2").css("display", "none");
+        $("#select_bgm_3").css("display", "inline-block");
+        aidn.util.setCookie("MusicNumber", "2", 2592e3);
+        n.preventDefault();
       }),
       $("#bt_feedback a").click(n),
       $("#bt_backtrack a").click(o);
@@ -219,10 +250,18 @@ var MainManager = function () {
               if(T){
                 if (l) {
                   //持续时间
-                  if (curTime>=14.24) {
-                    //console.log(curTime);
+                  MusicNumber = Number(aidn.util.getCookie("MusicNumber"));
+                  var duration = 0;
+                  if(MusicNumber == 0){
+                    duration = 14.24;
+                  }else if(MusicNumber == 1){
+                    duration = 54.89;
+                  }else if(MusicNumber ==2){
+                    duration = 13.25;
+                  }
+                  if (curTime>=duration) {
                     oldTime = aidn.___waContext.currentTime;
-                    var o = d[0][0];
+                    var o = d[0][MusicNumber];
                     0 <= o && r.play(o, 0, 0.5);
                   }
                   curTime = aidn.___waContext.currentTime - oldTime
@@ -234,7 +273,7 @@ var MainManager = function () {
             })();
           }),
           (this.start = function () {
-            curTime = 14.26;
+            curTime = 999;
             oldTime = aidn.___waContext.currentTime;
             (l = !0), (v = 0);
           });
@@ -243,13 +282,13 @@ var MainManager = function () {
           r.stopAll();
         };
         var oldTime = 0;
-        var curTime = 14.26;
+        var curTime = 999;
         var l = !1,
           o = 11;
         this.length = o;
         for (var s = [], n = 0; n < o; n++) s[n] = 1.2;
         s[1] *= 0.6;
-        var d = [[0], []],
+        var d = [[0, 1, 2],[]],
           a = "";
         (a += "3443443443443434"),
           (a += "5665665665665656"),
@@ -284,11 +323,19 @@ var MainManager = function () {
             })(n);
         };
         this.play = function (n, a) {
+          MusicNumber = Number(aidn.util.getCookie("MusicNumber"));
+          if(MusicNumber == 0){
+            f = 6e4 / 135;
+          }else if(MusicNumber == 1){
+            f = 6e4 / 140;
+          }else if(MusicNumber ==2){
+            f = 6e4 / 145;
+          }
           var e = 1e3 * (aidn.___waContext.currentTime + h[n] - m),
             t = Math.floor(e / f);
           t == r && 0 <= l && o.stop(l), (r = t), (l = n);
           var i = f - (e % f);
-          //console.log(i);
+          
           o.play(n, i / 1e3, 1.2);
         };
         var s = 32;
@@ -382,7 +429,7 @@ var MainManager = function () {
             r.addChild(o);
           },
           //==========================================================
-          //绘制随机多边形
+          //绘制实心圆形（内部方法）
           d = function (n, a) {
             function e() {
               var n,
@@ -521,7 +568,7 @@ var MainManager = function () {
             var M = {};
           },
           //==========================================================
-          //绘制实心圆形2
+          //方形条纹（内部方法）
           t = function (n, a) {
             var f = function (n) {
               function i() {
@@ -591,7 +638,7 @@ var MainManager = function () {
                   for (
                     var n,
                       a = Math.floor(7 * Math.random() + 2),
-                      e = 0.8 * Math.min(G, A),
+                      e =  Math.max(G, A),
                       t = ((v.size = e) / a) * (0.4 * Math.random() + 0.7),
                       i = (e / a) * (0.4 * Math.random() + 0.1),
                       o = L(),
@@ -709,7 +756,7 @@ var MainManager = function () {
               z.addChild(b),
               (f = new PIXI.Container()),
               z.addChild(f),
-              (T = new n(b)).setColor(8965324, 0);
+              (T = new n(b)).setColor(0x7dcce1, 0);
           }),
           //==========================================================
           //绑定点击事件和方法
@@ -775,10 +822,8 @@ var MainManager = function () {
                     //i = A * Math.random(),
                   var o = Math.min(G, A) * (0.2*Math.random() + 0.02);
                   var deg = 2*Math.PI*Math.random();
-                  //console.log(o);
                   //var rx = radius*Math.sin(deg)+n;
                   //var ry = radius*Math.cos(deg)+a;
-                  //console.log("("+rx+","+ry+")");
                   s.lineStyle(3 * Math.random() + 3, e),
                   s.beginFill(e),
                     s.drawCircle(0, 0, o),
@@ -989,7 +1034,6 @@ var MainManager = function () {
                 (v.visible = !1), C[e.id].push(e);
               }
               this.play = function () {
-                //console.log(3);
                 !(function () {
                   f.setChildIndex(v, f.children.length - 1),
                     (v.visible = !0),
@@ -1010,7 +1054,7 @@ var MainManager = function () {
                       l = n * Math.cos(r),
                       s = n * Math.sin(r);
                     (n += e),
-                      (t += 0.3),
+                      (t += 0.5),
                       (o = u[i] ? u[i] : new h(v)),
                       (u[i] = o);
                     var d = null;
@@ -1030,7 +1074,7 @@ var MainManager = function () {
             function (n, a) {
               var i = function (n) {
                 function e() {
-                  var n = Math.min(G, A) * (0.1 * Math.random() + 0.2);
+                  var n = Math.min(G, A) * (0.1 * Math.random() + 0.1);
                   l.beginFill(L()),
                     l.drawCircle(0, 0, n),
                     (l.x = i),
@@ -1097,16 +1141,109 @@ var MainManager = function () {
             //==========================================================
             //空心多边形扭曲 #5
             function (n, a) {
-              function e() {
-                C[t.id].push(t);
+              var i = function (n) {
+                function e() {
+
+                  var n = Math.min(G, A);
+                  var a = n * (0.08 * Math.random() + 0.05);
+                  l.lineStyle(4 * Math.random() + 4, L()),
+                    l.drawRect(-a / 2, -a / 2, a, a),
+                    (l.scale.x = 0),
+                    (l.scale.y = 0),
+                    (l.rotation = Math.random() * Math.PI);
+                    l.x = G/2;
+                    l.y = A/2;
+                    gsap.to(
+                      l, 0.5, {
+                        rotation: 0,
+                        ease: Power1.easeOut,
+                      }
+                    )
+                    gsap.to(l.scale, 0.5, {
+                      x: 1,
+                      y: 1,
+                      ease: Power1.easeOut,
+                      onComplete: t
+                    });
+                    gsap.to(
+                      l, 1, {
+                        x: o,
+                        y: r,
+                        ease: Power1.easeOut,
+                      }
+                    )
+
+                }
+                function t() {
+                  var n = Math.min(G, A),
+                    a = o + (n / 2) * (Math.random() - 0.5),
+                    e = r + (n / 2) * (Math.random() - 0.5);
+                  gsap.to(l, 0.5, {
+                    rotation: -Math.random() * Math.PI,
+                    ease: Power1.easeIn,
+                    onComplete: i,
+                  }),
+                    gsap.to(l.scale, 0.5, {
+                      x: 0,
+                      y: 0,
+                      ease: Power1.easeIn,
+                    });
+                }
+                function i() {
+                  l.visible = !1;
+                }
+                this.play = function (n, a) {
+                  (l.visible = !0),
+                    l.clear();
+                    if(side==0){
+                      o= G*Math.random();
+                      r= 0;
+                    }else if(side ==1){
+                      o=0;
+                      r= A*Math.random();
+                    }else if(side == 2){
+                      o = G*Math.random();
+                      r = A;
+                    }else if(side == 3){
+                      o = G;
+                      r = A*Math.random();
+                    };
+                    gsap.delayedCall(n, e);
+                };
+                var side = Math.floor(Math.random()*4);
+                var o,
+                  r,
+                  a = n,
+                  l = new PIXI.Graphics();
+                a.addChild(l);
+              };
+              function o() {
+                (l.visible = !1), C[e.id].push(e);
               }
               this.play = function () {
-                o.play(1, e);
+                !(function () {
+                  direction = Math.round(Math.random());
+                  originPlace = Math.floor(Math.random()*4);
+                  r.setChildIndex(l, r.children.length - 1), (l.visible = !0);
+                  for (
+                    var n = Math.floor(5 * Math.random() + 10), a = 0;
+                    a < n;
+                    a++
+                  ) {
+                    var e;
+                    (e = s[a] ? s[a] : new i(l)), (s[a] = e);
+                    var t = null;
+                    a == n - 1 && (t = o), e.play(0.06 * a, t);
+                  }
+                })();
               };
-              var t = this,
-                i = n;
+              var direction, originPlace;
+              var e = this,
+                r = n;
               this.id = a;
-              var o = new r(i);
+              var l = new PIXI.Container();
+              r.addChild(l);
+              var s = [];
             },
             //==========================================================
             //绘制多边形 #6
@@ -1156,45 +1293,198 @@ var MainManager = function () {
             function (n, a) {
               var i = function (n) {
                 function e() {
-                  var n = Math.min(G, A),
-                    a = n * (0.08 * Math.random() + 0.05);
+
+                  var n = Math.min(G, A);
+                  var a = n * (0.08 * Math.random() + 0.05);
                   l.lineStyle(4 * Math.random() + 4, L()),
                     l.drawRect(-a / 2, -a / 2, a, a),
-                    (l.x = o + (n / 2) * (Math.random() - 0.5)),
-                    (l.y = r + (n / 2) * (Math.random() - 0.5)),
                     (l.scale.x = 0),
                     (l.scale.y = 0),
-                    (l.rotation = Math.random() * Math.PI),
-                    gsap.to(l, 0.5, {
-                      x: o,
-                      y: r,
-                      rotation: 0,
-                      ease: Back.easeOut.config(1.7),
-                      onComplete: t,
-                    }),
+                    (l.rotation = Math.random() * Math.PI);
                     gsap.to(l.scale, 0.5, {
                       x: 1,
                       y: 1,
-                      ease: Back.easeOut.config(1.7),
+                      ease: Power1.easeOut,
                     });
+                    switch(originPlace){
+                      case 0:
+                        l.x = 0;
+                        l.y = 0;
+                        if(direction ==0){
+                          gsap.to(l, 1, {
+                            x: G,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            y: A/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }else{
+                          gsap.to(l, 1, {
+                            y: A,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            x: G/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }
+                        break;
+                      case 1:
+                        l.x = 0;
+                        l.y = A;
+                        if(direction ==0){
+                          gsap.to(l, 1, {
+                            x: G,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            y: A/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }else{
+                          gsap.to(l, 1, {
+                            y: 0,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            x: G/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }
+                        break;
+                      case 2:
+                        l.x = G;
+                        l.y = A;
+                        if(direction ==0){
+                          gsap.to(l, 1, {
+                            x: 0,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            y: A/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }else{
+                          gsap.to(l, 1, {
+                            y: 0,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            x: G/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }
+                        break;
+                      case 3:
+                        l.x = G;
+                        l.y = 0;
+                        if(direction ==0){
+                          gsap.to(l, 1, {
+                            x: 0,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            y: A/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }else{
+                          gsap.to(l, 1, {
+                            y: A,
+                            ease: Power0.easeOut,
+                          });
+                          gsap.to(l, 0.5, {
+                            x: G/2 ,
+                            rotation: 0,
+                            ease: Power1.easeOut,
+                            onComplete: t,
+                          });
+                        }
+                        break;
+                    }
+
                 }
                 function t() {
                   var n = Math.min(G, A),
                     a = o + (n / 2) * (Math.random() - 0.5),
                     e = r + (n / 2) * (Math.random() - 0.5);
+                    switch(originPlace){
+                      case 0:
+                        if(direction ==0){
+                          gsap.to(l, 0.5, {
+                            y: 0 ,
+                            ease: Power1.easeIn,
+                          });
+                        }else{
+                          gsap.to(l, 0.5, {
+                            x: 0 ,
+                            ease: Power1.easeIn,
+                          });
+                        }
+                        break;
+                      case 1:
+                        if(direction ==0){
+                          gsap.to(l, 0.5, {
+                            y: A ,
+                            ease: Power1.easeIn,
+                          });
+                        }else{
+                          gsap.to(l, 0.5, {
+                            x: 0 ,
+                            ease: Power1.easeIn,
+                          });
+                        }
+                        break;
+                      case 2:
+                        if(direction ==0){
+                          gsap.to(l, 0.5, {
+                            y: A ,
+                            ease: Power1.easeIn,
+                          });
+                        }else{
+                          gsap.to(l, 0.5, {
+                            x: G ,
+                            ease: Power1.easeIn,
+                          });
+                        }
+                        break;
+                      case 3:
+                        if(direction ==0){
+                          gsap.to(l, 0.5, {
+                            y: 0 ,
+                            ease: Power1.easeIn,
+                          });
+                        }else{
+                          gsap.to(l, 0.5, {
+                            x: G ,
+                            ease: Power1.easeIn,
+                          });
+                        }
+                        break;
+                    }
                   gsap.to(l, 0.5, {
-                    x: a,
-                    y: e,
                     rotation: -Math.random() * Math.PI,
-                    ease: Back.easeIn.config(1.7),
+                    ease: Power1.easeIn,
                     onComplete: i,
-                    delay: 0.2,
                   }),
                     gsap.to(l.scale, 0.5, {
                       x: 0,
                       y: 0,
-                      ease: Back.easeIn.config(1.7),
-                      delay: 0.2,
+                      ease: Power1.easeIn,
                     });
                 }
                 function i() {
@@ -1218,6 +1508,8 @@ var MainManager = function () {
               }
               this.play = function () {
                 !(function () {
+                  direction = Math.round(Math.random());
+                  originPlace = Math.floor(Math.random()*4);
                   r.setChildIndex(l, r.children.length - 1), (l.visible = !0);
                   for (
                     var n = Math.floor(5 * Math.random() + 5), a = 0;
@@ -1231,6 +1523,7 @@ var MainManager = function () {
                   }
                 })();
               };
+              var direction, originPlace;
               var e = this,
                 r = n;
               this.id = a;
@@ -1418,19 +1711,26 @@ var MainManager = function () {
             //绘制实心圆形 #11
             function (n, a) {
               function e() {
-                (o.visible = !1), C[t.id].push(t);
+                (o.visible = !1),(square.visible = !1), C[t.id].push(t);
               }
               this.play = function () {
                 !(function () {
                   i.setChildIndex(o, i.children.length - 1),
                     (o.visible = !0),
+                    (square.clear()),
+                    (square.visible = !0),
                     (o.x = G / 2),
                     (o.y = A / 2);
+                    square.x = G/2;
+                    square.y = A/2;
                   var n = L(),
-                    a = Math.min(G, A) * (0.25 * Math.random() + 0.1);
+                    a = Math.min(G, A) * (0.25 * Math.random() + 0.2);
+                    sideLength = 2*Math.sin(Math.PI/4)*(a);
                   r.clear(),
                     r.beginFill(n),
                     r.drawCircle(0, 0, a),
+                    square.drawRect(-sideLength/2, -sideLength/2, sideLength, sideLength);
+                    o.mask = square;
                     l.play(a, e);
                 })();
               };
@@ -1439,7 +1739,8 @@ var MainManager = function () {
               this.id = a;
               var o = new PIXI.Container(),
                 r = new PIXI.Graphics();
-              i.addChild(o), o.addChild(r);
+              var square = new PIXI.Graphics();
+              i.addChild(o), o.addChild(r), i.addChild(square);
               var l = new d(o, r);
             },
             //==========================================================
@@ -1447,67 +1748,87 @@ var MainManager = function () {
             function (n, a) {
               var u = function (n) {
                 function t() {
-                  gsap.to(l.scale, 0.4, {
-                    x: 0,
-                    y: 0,
-                    ease: Back.easeIn.config(2),
-                    onComplete: a,
-                    delay: 0.7,
-                  }),
-                    gsap.to(l, 0.4, {
-                      rotation: Math.random() * Math.PI * 2,
-                      ease: Back.easeIn.config(2),
-                      delay: 0.7,
-                    });
+                  var distance = o*0.3;
+                  if(direction == 0){
+                    l.x -=distance;
+                    l2.x+=distance;
+                  }else{
+                    l.y-=distance;
+                    l2.y+=distance;
+                  }
+                  gsap.to(l, 0.3, 
+                    {alpha: 0,
+                      ease: Power0.easeIn,
+                      onComplete: a,
+                      delay: 0.2});
+                      gsap.to(l2, 0.3, 
+                        {alpha: 0,
+                          ease: Power0.easeIn,
+                          delay: 0.2});
                 }
                 function a() {
-                  (l.visibloe = !1), i && i();
+                  (l2.visible = !1),(l.visible = !1), i && i();
                 }
                 (this.init = function (n, a, e, t) {
-                  (_state = 0), (o = e), (r = t), (l.x = n), (l.y = a);
+                  (_state = 0), (o = e), (r = t);
+                  if(direction==0){
+                    l.x = -o/2;
+                    l.y = -o/2;
+                    l2.x = 0;
+                    l2.y = -o/2;
+                  }else{
+                    l.x = - o/2;
+                    l.y = -o/2;
+                    l2.x = - o/2;
+                    l2.y = 0;
+                  }
                 }),
                   (this.play = function (n, a) {
                     (i = a),
-                      l.clear(),
-                      (l.visibloe = !0),
-                      l.beginFill(r),
-                      l.drawRect(0.5 * -o, 0.5 * -o, o, o),
-                      gsap.fromTo(
-                        l.scale,
-                        0.3,
-                        { x: 0, y: 0 },
-                        {
-                          x: 1,
-                          y: 1,
-                          ease: Back.easeOut.config(1.7),
-                          onComplete: t,
-                          delay: n,
-                        }
-                      ),
-                      gsap.fromTo(
+                      l.clear();
+                      l2.clear();
+                      (l.visible = !0);
+                      (l2.visible = !0);
+                      if(direction==0){
+                        l.beginFill(r);
+                        l.drawRect(0, 0, o/2, o);
+                        l2.beginFill(r);
+                        l2.drawRect(0,0,o/2,o);
+                      }else{
+                        l.beginFill(r);
+                        l.drawRect(0, 0, o, o/2);
+                        l2.beginFill(r);
+                        l2.drawRect(0,0,o,o/2);
+                      }
+
+                      l.alpha = 0;
+                      l2.alpha = 0;
+                      gsap.to(
                         l,
-                        0.7,
-                        { rotation: Math.random() * Math.PI * 2 },
+                        0.5,
                         {
-                          rotation: 0,
-                          ease: Elastic.easeOut.config(1, 0.3),
-                          delay: n,
+                          alpha: 1,
+                          ease: Bounce.easeOut,
+                          onComplete: t
                         }
-                      );
-                    var e = Math.random() * Math.PI;
-                    gsap.fromTo(
-                      y,
-                      1,
-                      { rotation: 0 },
-                      { rotation: e, ease: Bounce.easeOut, delay: n }
-                    );
+                      )
+                      gsap.to(
+                        l2,
+                        0.5,
+                        {
+                          alpha: 1,
+                          ease: Bounce.easeOut,
+                        }
+                      )
                   });
                 var i,
                   o,
                   r,
                   e = n,
                   l = new PIXI.Graphics();
+                var l2 = new PIXI.Graphics();
                 e.addChild(l);
+                e.addChild(l2);
               };
               function v() {
                 (y.visible = !1), C[e.id].push(e);
@@ -1518,19 +1839,22 @@ var MainManager = function () {
                     (y.visible = !0),
                     (y.x = G / 2),
                     (y.y = A / 2);
-                  var n = Math.floor(8 * Math.random() + 6),
-                    a = Math.min(G, A) * (0.25 * Math.random() + 0.25),
+                  var n = 1,
+                  //Math.floor(8 * Math.random() + 6),
+                    a = Math.min(G, A),
+                    // * (0.25 * Math.random() + 0.25),
                     e = 360 / n,
-                    t = a * (0.15 * Math.random() + 0.05),
+                    t = a * (0.2 * Math.random() + 0.5),
                     i = L(),
                     o = (Math.PI / 2) * Math.floor(4 * Math.random()),
                     r = 1;
+                  direction = Math.round(Math.random()); //0或1 
                   Math.random() < 0.5 && (r = -1);
                   for (var l = 0; l < n; l++) {
                     var s,
                       d = ((r * e * l + o) * Math.PI) / 180,
-                      h = a * Math.cos(d),
-                      c = a * Math.sin(d);
+                      h = G/2,
+                      c = A/2;
                     (s = w[l] ? w[l] : new u(y)), (w[l] = s);
                     var f = null;
                     l == n - 1 && (f = v),
@@ -1539,6 +1863,7 @@ var MainManager = function () {
                   }
                 })();
               };
+              var direction;
               var e = this,
                 p = n;
               this.id = a;
@@ -1631,6 +1956,10 @@ var MainManager = function () {
               function i() {
                 (r.visible = !1), C[e.id].push(e);
               }
+              function endingAnimation(){
+                gsap.to(l.scale, 0.3, { x: 0, ease: Power2.easeOut });
+                gsap.to(s.scale, 0.3, { y: 0, ease: Power2.easeOut, onComplete:i });
+              }
               this.play = function () {
                 !(function () {
                   (r.visible = !0),
@@ -1638,42 +1967,36 @@ var MainManager = function () {
                     (r.x = 0.2 * G + 0.6 * G * Math.random()),
                     (r.y = 0.2 * A + 0.6 * A * Math.random());
                   var n,
-                    a = Math.min(G, A) * (0.7 + 0.2 * Math.random()),
-                    e = (a / 10) * (0.5 + 0.8 * Math.random()),
+                    a = Math.max(G, A) * (0.1),
+                    //e = (a / 10) * (0.5 + 0.8 * Math.random()),
                     t = L();
                   l.clear(),
                     l.beginFill(t),
-                    l.drawRect(0, -e / 2, a, e),
+                    l.drawRect(-a/2, -a / 2, a, a),
                     s.clear(),
                     s.beginFill(t),
-                    s.drawRect(-e / 2, 0, e, a),
+                    s.drawRect(-a / 2, -a / 2, a, a),
                     (l.y = 0),
-                    (l.x = -a / 2),
+                    (l.x = 0,
                     (s.x = 0),
-                    (s.y = -a / 2),
+                    (s.y = 0),
                     (r.rotation = (45 * Math.PI) / 180),
                     (l.scale.x = 0),
+                    (l.scale.y = 0),
+                    (s.scale.x = 0),
                     (s.scale.y = 0),
                     (n =
                       Math.random() < 0.5
                         ? (-135 * Math.PI) / 180
-                        : (215 * Math.PI) / 180),
-                    new TimelineLite()
-                      .to(l.scale, 0.4, { x: 1, ease: Power2.easeOut })
-                      .to(s.scale, 0.4, { y: 1, ease: Power2.easeOut }, 0.1)
-                      .to(
-                        r,
-                        0.6,
-                        { rotation: n, ease: Back.easeOut.config(1.7) },
-                        0
-                      )
-                      .to(l.scale, 0.3, { x: 0, ease: Power2.easeOut })
-                      .to(
-                        s.scale,
-                        0.3,
-                        { y: 0, ease: Power2.easeOut, onComplete: i },
-                        0.6
-                      );
+                        : (215 * Math.PI) / 180));
+                    gsap.to(
+                      l.scale, 0.4,
+                      { x: 0.5, y: 20, ease: Power2.easeOut }
+                    );
+                    gsap.to(
+                      s.scale, 0.4,
+                      { y: 0.5, x: 20, ease: Power2.easeOut, onComplete: endingAnimation}
+                    );
                 })();
               };
               var e = this,
@@ -1788,6 +2111,7 @@ var MainManager = function () {
                   var n = X();
                   (c = P[n]),
                     $("#about").css("background-color", "#" + c.toString(16)),
+                    $("#option").css("background-color", "#" + c.toString(16)),
                     Math.random() < 0.3 && T.flash(p),
                     (O = n),
                     y.clear(),
@@ -1849,18 +2173,18 @@ var MainManager = function () {
           C[g] = [];
         var T,
           P = [
-            13430510, 8965324, 9099756, 961181, 1089457, 34969, 13934238,
-            16110792, 15488645, 16531063, 5853015, 3222317,
+            0x7dcce1, 0xfbd475, 0xf2e1ec, 0x463840, 0xed4444, 0xe4885f, 0x383745,
+            0xe98799, 0x6480c1, 0x99e1e6, 0xb09882, 0xc8c0c6,
           ],
           k = [
-            13430510, 8965324, 9099756, 961181, 1089457, 34969, 13934238,
-            16110792, 15488645, 16531063, 5853015, 3222317,
+            0x7dcce1, 0xfbd475, 0xf2e1ec, 0x463840, 0xed4444, 0xe4885f, 0x383745,
+            0xe98799, 0x6480c1, 0x99e1e6, 0xb09882, 0xc8c0c6,
           ],
           _ = P.length,
           O = 0;
         function L() {
           var n = Math.random();
-          return n < 0.03 ? 4473924 : n < 0.18 ? 16777215 : k[X()];
+          return k[X()];
         }
         function X() {
           for (var n = 0; n < 10; n++) {
